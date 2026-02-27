@@ -5,23 +5,23 @@ import { MeshDistortMaterial, Sphere, Float } from "@react-three/drei";
 
 export default function FloatingShape() {
   return (
-    <div className="fixed top-0 left-0 w-full h-full -z-10 opacity-60">
-      <Canvas>
-        {/* Lights to make the material look 3D */}
-        <ambientLight intensity={1.5} />
-        <directionalLight position={[2, 5, 2]} intensity={2} />
+   <div className="fixed top-0 right-0 w-[60vw] h-full pointer-events-none" style={{ zIndex: 0 }}>
+      {/* gl={{ alpha: true }} is CRITICAL — without it Three.js renders a solid black background */}
+      <Canvas gl={{ alpha: true }} style={{ background: "transparent" }}>
+        <ambientLight intensity={3} />
+        <directionalLight position={[2, 5, 2]} intensity={4} />
+        <pointLight position={[0, 0, 3]} intensity={3} color="#9b30ff" />
+        <pointLight position={[-3, -3, -2]} intensity={2} color="#ff0055" />
 
-        {/* Float makes the object gently bob up and down */}
-        <Float speed={2} rotationIntensity={1} floatIntensity={1}>
-          <Sphere args={[1, 100, 200]} scale={2.4}>
-            {/* MeshDistortMaterial creates that liquid/wobble effect */}
+        <Float speed={1.5} rotationIntensity={0.6} floatIntensity={0.8}>
+          <Sphere args={[1, 128, 256]} scale={2.2}>
             <MeshDistortMaterial
-              color="#3d1c59"  // Deep purple (change this to match your vibe)
+              color="#6b21a8"
               attach="material"
-              distort={0.5}   // How much it wobbles (0 to 1)
-              speed={2}       // How fast it wobbles
-              roughness={0.2}
-              metalness={0.9} // Makes it look metallic
+              distort={0.45}
+              speed={1.5}
+              roughness={0.1}
+              metalness={0.8}
             />
           </Sphere>
         </Float>
