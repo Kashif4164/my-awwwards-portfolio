@@ -13,6 +13,13 @@
   --accent-green: #00ff88;
 }
 
+/* ─── FONT VARIABLES ─────────────────────────────── */
+@theme {
+  --font-sans: var(--font-sans);
+  --font-oswald: var(--font-oswald);
+  --font-serif: var(--font-serif);
+}
+
 /* ─── BASE ───────────────────────────────────────────── */
 html {
   scrollbar-width: none;
@@ -29,6 +36,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   cursor: none; /* Hide default cursor — we use custom one */
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 /* ─── SELECTION ──────────────────────────────────────── */
@@ -119,4 +134,32 @@ body {
 
 .char-inner {
   display: inline-block;
+}
+
+.hero-cursor,
+.hero-cursor-dot {
+  will-change: transform;
+}
+
+.hero-grid-overlay {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  body {
+    cursor: auto;
+  }
+
+  .grain-overlay {
+    animation: none;
+  }
 }

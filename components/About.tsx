@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,9 +8,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 // Marquee words
-const MARQUEE_WORDS = ["Design", "•", "Code", "•", "Motion", "•", "Three.js", "•", "GSAP", "•", "React", "•"];
+const MARQUEE_WORDS = ["GenAI", "•", "Full-Stack", "•", "RAG", "•", "Next.js", "•", "LangChain", "•", "React", "•", "GCP", "•"];
 
 export default function About() {
+  const [reduceMotion, setReduceMotion] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
   const container = useRef(null);
   const textRef = useRef<HTMLParagraphElement>(null);
   const marqueeRef = useRef<HTMLDivElement>(null);
@@ -19,10 +22,20 @@ export default function About() {
   const statsRef = useRef<HTMLDivElement>(null);
 
   const paragraph =
-    "I am a creative developer who bridges the gap between design and technology. I don't just build websites — I craft immersive digital experiences that leave a lasting impression.";
+    "I am a GenAI & Full-Stack Engineer with practical experience building AI-powered LMS platforms and enterprise RAG solutions. I bring deep expertise in Python, LangChain, modern web architecture with React and Next.js, and scalable cloud deployments on Google Cloud Platform.";
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = (event: MediaQueryListEvent) => setReduceMotion(event.matches);
+
+    mediaQuery.addEventListener("change", onChange);
+    return () => mediaQuery.removeEventListener("change", onChange);
+  }, []);
 
   useGSAP(
     () => {
+      if (reduceMotion) return;
+
       // Word reveal on scroll
       const words = textRef.current?.querySelectorAll(".word");
       if (words) {
@@ -105,7 +118,7 @@ export default function About() {
         }
       }
     },
-    { scope: container }
+    { scope: container, dependencies: [reduceMotion] }
   );
 
   return (
@@ -168,10 +181,10 @@ export default function About() {
           className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-neutral-800 pt-12"
         >
           {[
-            { num: "3+", label: "Years Experience" },
-            { num: "40+", label: "Projects Shipped" },
-            { num: "12+", label: "Happy Clients" },
-            { num: "∞", label: "Ideas Brewing" },
+            { num: "3+", label: "Projects Shipped" },
+            { num: "1st", label: "Year ML Eng" },
+            { num: "90%", label: "RAG Precision" },
+            { num: "70%", label: "Task automation" },
           ].map((s) => (
             <div key={s.label} className="stat-item flex flex-col gap-2">
               <span className="text-5xl md:text-6xl font-black text-white tracking-tight leading-none">
@@ -187,12 +200,12 @@ export default function About() {
         {/* ── BOTTOM ROW ── */}
         <div className="mt-16 flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
           <p className="text-neutral-500 text-sm max-w-sm leading-relaxed">
-            Currently open to full-time roles and select freelance projects. Let's build something remarkable together.
+            Currently open to full-time roles and select freelance projects. Let&apos;s build something remarkable together.
           </p>
-          <button className="group relative inline-flex items-center gap-4 text-[11px] uppercase tracking-[0.3em] text-neutral-400 hover:text-white transition-colors duration-300">
+          <a href="#contact" className="group relative inline-flex items-center gap-4 text-[11px] uppercase tracking-[0.3em] text-neutral-400 hover:text-white transition-colors duration-300">
             <span className="w-8 h-px bg-neutral-700 group-hover:w-16 group-hover:bg-[#ff0055] transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" />
             Get In Touch
-          </button>
+              </a>
         </div>
       </div>
     </section>
