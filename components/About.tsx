@@ -28,16 +28,15 @@ export default function About() {
       if (words) {
         gsap.fromTo(
           words,
-          { opacity: 0.1, filter: "blur(4px)" },
+          { opacity: 0.1 },
           {
             opacity: 1,
-            filter: "blur(0px)",
             stagger: 0.08,
             scrollTrigger: {
               trigger: container.current,
               start: "top 65%",
               end: "center 40%",
-              scrub: 1.2,
+              scrub: true,
             },
           }
         );

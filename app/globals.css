@@ -1,122 +1,86 @@
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-/* ─── DESIGN TOKENS ─────────────────────────────────── */
-:root {
-  --bg: #080808;
-  --surface: #111111;
-  --border: #1a1a1a;
-  --text: #f0f0f0;
-  --muted: #555;
-  --accent: #ff0055;
-  --accent-green: #00ff88;
+
+@layer base {
+  :root {
+    --bg-main: #090b10;
+    --card-bg: rgba(18, 23, 34, 0.7);
+    --card-border: rgba(255, 255, 255, 0.08);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: #e2e8f0;
+    overflow-x: hidden;
+  }
 }
 
-/* ─── BASE ───────────────────────────────────────────── */
-html {
-  scrollbar-width: none;
-  background-color: var(--bg);
-  color: var(--text);
+/* Subtle dot grid pattern */
+.bg-grid-pattern {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
+.bg-dot-pattern {
+  background-image: radial-gradient(rgba(99, 102, 241, 0.15) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Glassmorphism utility classes */
+.glass-panel {
+  background: rgba(15, 20, 32, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-pill {
+  background: rgba(20, 26, 42, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px -5px rgba(99, 102, 241, 0.15);
+}
+
+/* Glowing badge animation */
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+/* Custom sleek scrollbar */
 ::-webkit-scrollbar {
-  display: none;
+  width: 8px;
 }
-
-body {
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  cursor: none; /* Hide default cursor — we use custom one */
+::-webkit-scrollbar-track {
+  background: #090b10;
 }
-
-/* ─── SELECTION ──────────────────────────────────────── */
-::selection {
-  background: var(--accent);
-  color: #fff;
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
 }
-
-/* ─── FONT OSWALD UTILITY ────────────────────────────── */
-.font-oswald {
-  font-family: var(--font-oswald), sans-serif;
-}
-
-/* ─── MARQUEE ANIMATION ──────────────────────────────── */
-/* Used as fallback if GSAP not loaded */
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.animate-marquee {
-  animation: marquee 24s linear infinite;
-}
-
-/* ─── GRAIN OVERLAY ──────────────────────────────────── */
-.grain-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
-  pointer-events: none;
-  opacity: 0.04;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 128px 128px;
-  mix-blend-mode: overlay;
-  animation: grain 0.5s steps(2) infinite;
-}
-
-@keyframes grain {
-  0%, 100% { transform: translate(0, 0); }
-  10%       { transform: translate(-2%, -3%); }
-  20%       { transform: translate(3%, 2%); }
-  30%       { transform: translate(-1%, 4%); }
-  40%       { transform: translate(4%, -1%); }
-  50%       { transform: translate(-3%, 1%); }
-  60%       { transform: translate(2%, -4%); }
-  70%       { transform: translate(-4%, 3%); }
-  80%       { transform: translate(1%, -2%); }
-  90%       { transform: translate(-2%, 4%); }
-}
-
-/* ─── SMOOTH SCROLLBAR CUSTOM ────────────────────────── */
-/* Keep Lenis scroll, just style the progress bar */
-.scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 0%;
-  height: 2px;
-  background: var(--accent);
-  z-index: 9999;
-  transition: width 0.1s linear;
-}
-
-/* ─── HOVER UNDERLINE UTILITY ────────────────────────── */
-.hover-underline {
-  position: relative;
-}
-.hover-underline::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: var(--accent);
-  transition: width 0.5s cubic-bezier(0.76, 0, 0.24, 1);
-}
-.hover-underline:hover::after {
-  width: 100%;
-}
-
-/* ─── CHAR ANIMATION WRAPPER ─────────────────────────── */
-.char {
-  display: inline-block;
-  overflow: hidden;
-}
-
-.char-inner {
-  display: inline-block;
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
 }
