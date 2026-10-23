@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client";
 
 import { useState } from "react";
@@ -28,6 +29,17 @@ import { GithubIcon, LinkedinIcon } from "./components/SocialIcons";
 import RagPlayground from "./components/RagPlayground";
 import BentoContact from "./components/BentoContact";
 import AntiGravityCanvas from "./components/AntiGravityCanvas";
+=======
+import Hero from "@/components/Hero";
+import FluidBackground from "@/components/FluidBackground";
+import About from "@/components/About";
+import Experience from "@/components/Experience";
+import Projects from "@/components/Projects";
+import ScrollProgress from "@/components/ScrollProgress";
+import Contact from "@/components/Contact";
+import CustomCursor from "@/components/CustomCursor";
+import Preloader from "@/components/Preloader";
+>>>>>>> 7f1e02d0cf5471a8a2782536ada9491d33b2b3a8
 
 export default function Home() {
   const [selectedTech, setSelectedTech] = useState<string | null>(null);
@@ -37,14 +49,24 @@ export default function Home() {
     : PROJECTS;
 
   return (
+<<<<<<< HEAD
     <main className="min-h-screen bg-[#07090e] text-slate-100 selection:bg-cyan-500/30 selection:text-cyan-200 relative overflow-hidden bg-grid-pattern pb-24">
       {/* Interactive Anti-Gravity Canvas */}
       <AntiGravityCanvas />
+=======
+    <main className="relative bg-transparent">
+      <Preloader />
+      <CustomCursor />
+      
+      {/* Animated grain overlay — critical for premium dark feel */}
+      <div className="grain-overlay" aria-hidden="true" />
+>>>>>>> 7f1e02d0cf5471a8a2782536ada9491d33b2b3a8
 
       {/* Ambient background glows */}
       <div className="fixed top-[-10%] left-[20%] w-[600px] h-[600px] bg-cyan-600/10 rounded-full blur-[140px] pointer-events-none -z-10" />
       <div className="fixed bottom-[10%] right-[10%] w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[150px] pointer-events-none -z-10" />
 
+<<<<<<< HEAD
       {/* Floating Pill Navigation */}
       <header className="sticky top-6 z-50 flex justify-center px-4">
         <nav className="glass-pill px-4 sm:px-6 py-2.5 rounded-full flex items-center gap-1 sm:gap-2 shadow-2xl border border-white/10 text-xs sm:text-sm font-medium">
@@ -523,6 +545,17 @@ export default function Home() {
           </div>
         </footer>
       </div>
+=======
+      {/* Three.js / WebGL Fluid Background */}
+      <FluidBackground />
+
+      <Hero />
+      <About />
+      <Experience />
+      <Projects />
+
+      <Contact />
+>>>>>>> 7f1e02d0cf5471a8a2782536ada9491d33b2b3a8
     </main>
   );
 }
