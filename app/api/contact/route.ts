@@ -1,12 +1,5 @@
 import { NextResponse } from "next/server";
-<<<<<<< HEAD
 import { createClient } from "@supabase/supabase-js";
-
-export async function POST(req: Request) {
-  try {
-    const body = await req.json();
-    const { name, email, message } = body;
-=======
 
 type ContactPayload = {
   name?: string;
@@ -17,19 +10,18 @@ type ContactPayload = {
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    const body = (await request.json()) as ContactPayload;
+    const body = (await req.json()) as ContactPayload;
 
-    // Honeypot field should remain empty in real submissions.
+    // Honeypot field - bots fill this, real users don't
     if (body.company) {
-      return NextResponse.json({ ok: true });
+      return NextResponse.json({ ok: true }, { status: 200 });
     }
 
     const name = body.name?.trim() || "";
     const email = body.email?.trim() || "";
     const message = body.message?.trim() || "";
->>>>>>> 7f1e02d0cf5471a8a2782536ada9491d33b2b3a8
 
     if (!name || !email || !message) {
       return NextResponse.json(
@@ -38,25 +30,13 @@ export async function POST(request: Request) {
       );
     }
 
-<<<<<<< HEAD
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailPattern.test(email)) {
       return NextResponse.json(
         { error: "Please enter a valid email address." },
-=======
-    if (!emailPattern.test(email)) {
-      return NextResponse.json({ error: "Invalid email format." }, { status: 400 });
-    }
-
-    if (message.length < 20) {
-      return NextResponse.json(
-        { error: "Message should be at least 20 characters." },
->>>>>>> 7f1e02d0cf5471a8a2782536ada9491d33b2b3a8
         { status: 400 }
       );
     }
 
-<<<<<<< HEAD
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey =
       process.env.SUPABASE_SERVICE_ROLE_KEY ||
@@ -76,9 +56,9 @@ export async function POST(request: Request) {
 
     const { error } = await supabase.from("messages").insert([
       {
-        name: name.trim(),
-        email: email.trim(),
-        message: message.trim(),
+        name,
+        email,
+        message,
         created_at: new Date().toISOString(),
       },
     ]);
@@ -99,20 +79,6 @@ export async function POST(request: Request) {
     console.error("Contact API error:", err);
     return NextResponse.json(
       { error: "An unexpected server error occurred." },
-=======
-    // Replace this with an email provider integration (Resend/SendGrid) using env vars.
-    console.info("Contact request", {
-      name,
-      email,
-      message,
-      receivedAt: new Date().toISOString(),
-    });
-
-    return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json(
-      { error: "Something went wrong while sending your message." },
->>>>>>> 7f1e02d0cf5471a8a2782536ada9491d33b2b3a8
       { status: 500 }
     );
   }

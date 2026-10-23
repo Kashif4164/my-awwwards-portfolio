@@ -1,14 +1,24 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-sans);
+  --font-oswald: var(--font-oswald);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+}
+
 @layer base {
   :root {
     --bg-main: #090b10;
     --card-bg: rgba(18, 23, 34, 0.7);
     --card-border: rgba(255, 255, 255, 0.08);
+    --accent: #06b6d4;
   }
 
   html {
     scroll-behavior: smooth;
+    background-color: var(--bg-main);
+    color: #e2e8f0;
   }
 
   body {
@@ -18,25 +28,10 @@
   }
 }
 
-<<<<<<< HEAD
 /* Subtle dot grid pattern */
 .bg-grid-pattern {
   background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
   background-size: 24px 24px;
-=======
-/* ─── FONT VARIABLES ─────────────────────────────── */
-@theme {
-  --font-sans: var(--font-sans);
-  --font-oswald: var(--font-oswald);
-  --font-serif: var(--font-serif);
-}
-
-/* ─── BASE ───────────────────────────────────────────── */
-html {
-  scrollbar-width: none;
-  background-color: var(--bg);
-  color: var(--text);
->>>>>>> 7f1e02d0cf5471a8a2782536ada9491d33b2b3a8
 }
 
 .bg-dot-pattern {
@@ -92,14 +87,13 @@ html {
 ::-webkit-scrollbar-track {
   background: #090b10;
 }
-<<<<<<< HEAD
 ::-webkit-scrollbar-thumb {
   background: #1e293b;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #334155;
-=======
+}
 
 a:focus-visible,
 button:focus-visible,
@@ -109,19 +103,18 @@ textarea:focus-visible {
   outline-offset: 3px;
 }
 
-/* ─── SELECTION ──────────────────────────────────────── */
+/* Selection */
 ::selection {
-  background: var(--accent);
-  color: #fff;
+  background: rgba(6, 182, 212, 0.3);
+  color: #a5f3fc;
 }
 
-/* ─── FONT OSWALD UTILITY ────────────────────────────── */
+/* Font Oswald Utility */
 .font-oswald {
   font-family: var(--font-oswald), sans-serif;
 }
 
-/* ─── MARQUEE ANIMATION ──────────────────────────────── */
-/* Used as fallback if GSAP not loaded */
+/* Marquee Animation */
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
@@ -131,7 +124,7 @@ textarea:focus-visible {
   animation: marquee 24s linear infinite;
 }
 
-/* ─── GRAIN OVERLAY ──────────────────────────────────── */
+/* Grain Overlay */
 .grain-overlay {
   position: fixed;
   inset: 0;
@@ -158,8 +151,7 @@ textarea:focus-visible {
   90%       { transform: translate(-2%, 4%); }
 }
 
-/* ─── SMOOTH SCROLLBAR CUSTOM ────────────────────────── */
-/* Keep Lenis scroll, just style the progress bar */
+/* Scroll progress bar */
 .scroll-progress {
   position: fixed;
   top: 0;
@@ -171,7 +163,7 @@ textarea:focus-visible {
   transition: width 0.1s linear;
 }
 
-/* ─── HOVER UNDERLINE UTILITY ────────────────────────── */
+/* Hover underline utility */
 .hover-underline {
   position: relative;
 }
@@ -189,7 +181,7 @@ textarea:focus-visible {
   width: 100%;
 }
 
-/* ─── CHAR ANIMATION WRAPPER ─────────────────────────── */
+/* Char animation wrappers */
 .char {
   display: inline-block;
   overflow: hidden;
@@ -225,5 +217,4 @@ textarea:focus-visible {
   .grain-overlay {
     animation: none;
   }
->>>>>>> 7f1e02d0cf5471a8a2782536ada9491d33b2b3a8
 }
