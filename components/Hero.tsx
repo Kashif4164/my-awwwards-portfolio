@@ -1,237 +1,163 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
-import gsap from "gsap";
-import { soundFx } from "./SoundFX";
+import { ArrowRight, Mail } from "lucide-react";
+
+function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+      />
+    </svg>
+  );
+}
+
+function LinkedinIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+    </svg>
+  );
+}
 
 export default function Hero() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const nameRef = useRef<HTMLHeadingElement>(null);
-  const kickerRef = useRef<HTMLSpanElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const microDetailsRef = useRef<HTMLDivElement>(null);
-  const scrollLineRef = useRef<HTMLDivElement>(null);
-  const shouldReduceMotionRef = useRef(false);
-
-  const [isMuted, setIsMuted] = useState(false);
-
-  useEffect(() => {
-    shouldReduceMotionRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  }, []);
-
-  const handleSoundToggle = () => {
-    const muted = soundFx.toggleMute();
-    setIsMuted(muted);
-  };
-
-  useEffect(() => {
-    const handleMouseEnter = () => {
-      soundFx.playHover();
-    };
-
-    const handleMouseClick = () => {
-      soundFx.playClick();
-    };
-
-    const magneticEls = document.querySelectorAll("[data-magnetic]");
-    magneticEls.forEach((el) => {
-      el.addEventListener("mouseenter", handleMouseEnter);
-      el.addEventListener("click", handleMouseClick);
-    });
-
-    return () => {
-      magneticEls.forEach((el) => {
-        el.removeEventListener("mouseenter", handleMouseEnter);
-        el.removeEventListener("click", handleMouseClick);
-      });
-    };
-  }, []);
-
-  // --- ENTRANCE ANIMATION ---
-  useEffect(() => {
-    if (shouldReduceMotionRef.current) return;
-
-    const name = nameRef.current;
-    if (!name) return;
-    const text = name.innerText;
-    if (!text.includes("char-inner")) {
-      name.innerHTML = text
-        .split("")
-        .map(
-          (char) =>
-            `<span class="char" style="display:inline-block; overflow:hidden"><span class="char-inner" style="display:inline-block">${char}</span></span>`
-        )
-        .join("");
-    }
-
-    const chars = name.querySelectorAll(".char-inner");
-    const tl = gsap.timeline({ delay: 0.8 });
-
-    tl.from(chars, {
-      yPercent: 110,
-      skewY: 8,
-      duration: 1.4,
-      ease: "power4.out",
-      stagger: 0.04,
-    })
-      .from(
-        kickerRef.current,
-        { yPercent: 120, opacity: 0, duration: 1, ease: "power3.out" },
-        "-=1"
-      )
-      .from(
-        titleRef.current,
-        { yPercent: 120, opacity: 0, duration: 1, ease: "power3.out" },
-        "-=0.9"
-      )
-      .from(
-        microDetailsRef.current,
-        { opacity: 0, duration: 1, ease: "power2.out" },
-        "-=0.6"
-      )
-      .from(
-        scrollLineRef.current,
-        { scaleY: 0, transformOrigin: "top center", duration: 1.2, ease: "power3.inOut" },
-        "-=0.8"
-      );
-  }, []);
-
   return (
-    <section
-      ref={containerRef}
-      className="relative z-10 flex min-h-screen flex-col justify-between bg-transparent px-6 md:px-12 pt-8 pb-10 overflow-hidden"
-    >
-      {/* Subtle grid overlay */}
-      <div className="hero-grid-overlay pointer-events-none absolute inset-0 opacity-[0.03]" />
-
-      {/* Accent drop-line */}
-      <div
-        ref={scrollLineRef}
-        className="absolute top-0 left-6 md:left-12 w-px h-32 md:h-48 bg-gradient-to-b from-[#06b6d4] to-transparent origin-top opacity-70"
-      />
-
-      {/* ── HEADER ── */}
-      <header
-        ref={microDetailsRef}
-        className="relative z-10 flex w-full items-start justify-between text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-medium"
-      >
-        <div className="flex flex-col gap-1 pt-12 pl-4 md:pl-6 ml-0 md:ml-1 relative">
-          <div className="absolute top-[3.3rem] left-0 w-3 h-px bg-[#06b6d4] opacity-50" />
-          <span className="text-neutral-400 font-sans tracking-[0.3em]">Folio</span>
-          <span className="text-white font-bold tracking-widest">©2026</span>
-        </div>
-
-        <div className="flex items-center gap-6 pt-10">
-          {/* Audio Toggle Button */}
-          <button
-            onClick={handleSoundToggle}
-            data-magnetic
-            data-cursor-text="AUDIO"
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-neutral-800 hover:border-[#06b6d4] bg-neutral-950 text-[9px] uppercase tracking-widest text-neutral-300 transition-colors duration-300 cursor-pointer"
-          >
-            <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                isMuted ? "bg-neutral-600" : "bg-[#06b6d4] animate-ping"
-              }`}
-            />
-            <span>{isMuted ? "Sound Off" : "Sound On"}</span>
-          </button>
-
-          <div className="text-right flex flex-col gap-1 items-end">
-            <span>India / Mangaluru</span>
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00ff88] animate-pulse" />
-              Available for work
+    <div className="relative z-10 w-full">
+      {/* ── TOP NAVIGATION BAR (Apple-style Glassmorphism) ── */}
+      <nav className="w-full apple-glass-nav sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 h-16 flex items-center justify-between">
+          {/* Logo / Name */}
+          <a href="#" className="flex items-center gap-3 group">
+            <span className="font-mono font-bold text-lg tracking-tight text-white group-hover:text-[#06b6d4] transition-colors">
+              kashif.dev
             </span>
-          </div>
-        </div>
-      </header>
-
-      {/* ── MAIN ── */}
-      <main className="relative z-10 flex w-full flex-col items-start justify-center -mt-8">
-        <div className="overflow-hidden mb-6 ml-1">
-          <span
-            ref={kickerRef}
-            className="block text-[10px] tracking-[0.4em] text-[#06b6d4] uppercase font-medium"
-          >
-            ( 001 ) — Hello, I&apos;m
-          </span>
-        </div>
-
-        <h1
-          ref={nameRef}
-          className="text-[22vw] md:text-[18vw] leading-[0.82] font-black uppercase tracking-[-0.02em] text-[#f0f0f0] select-none cursor-default"
-          data-magnetic
-          data-cursor-text="DEV"
-        >
-          Kashif
-        </h1>
-
-        <div className="overflow-hidden mt-6 ml-1">
-          <h2
-            ref={titleRef}
-            className="text-2xl md:text-5xl lg:text-6xl font-light tracking-tight text-white max-w-4xl leading-tight"
-          >
-            A{" "}
-            <span className="italic font-serif text-white tracking-normal font-bold">
-              GenAI
-            </span>{" "}
-            &{" "}
-            <span className="italic font-serif text-white tracking-normal font-bold">
-              Backend
-            </span>{" "}
-            Architect
-          </h2>
-        </div>
-
-        <div className="mt-12 flex items-center gap-8">
-          <div className="h-px w-24 bg-neutral-700" />
-          <a
-            href="#projects"
-            data-magnetic
-            data-cursor-text="EXPLORE"
-            className="group relative text-[11px] uppercase tracking-[0.3em] text-neutral-400 hover:text-white transition-colors duration-300"
-          >
-            <span>View My Work</span>
-            <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#06b6d4] group-hover:w-full transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" />
+            <span className="hidden sm:inline-block text-[11px] font-mono text-neutral-400 uppercase tracking-wider pl-3 border-l border-white/10">
+              GenAI & Backend
+            </span>
           </a>
-        </div>
-      </main>
 
-      {/* ── FOOTER ── */}
-      <footer className="relative z-10 flex w-full items-end justify-between text-[10px] uppercase tracking-[0.2em] text-neutral-600 font-medium">
-        <div className="flex gap-3 items-center">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#06b6d4] animate-pulse" />
-          <span>Scroll to explore</span>
-        </div>
+          {/* Nav links */}
+          <div className="hidden md:flex items-center gap-8 text-xs font-mono uppercase tracking-widest text-neutral-300">
+            <a href="#about" className="hover:text-white transition-colors">
+              About
+            </a>
+            <a href="#experience" className="hover:text-white transition-colors">
+              Experience
+            </a>
+            <a href="#projects" className="hover:text-white transition-colors">
+              Projects
+            </a>
+            <a href="#contact" className="hover:text-white transition-colors">
+              Contact
+            </a>
+          </div>
 
-        <div className="absolute right-0 bottom-0 flex flex-col items-center gap-2">
-          <div
-            ref={scrollLineRef}
-            className="w-px h-20 bg-gradient-to-b from-transparent to-[#06b6d4]"
-          />
-        </div>
-
-        <div className="flex gap-6">
-          {[
-            { label: "GH", href: "https://github.com/Kashif4164" },
-            { label: "LI", href: "https://linkedin.com/in/sheikmohammedkashif" },
-            { label: "TW", href: "https://twitter.com" },
-          ].map((s) => (
+          {/* Right: Socials */}
+          <div className="flex items-center gap-2">
             <a
-              key={s.label}
-              href={s.href}
+              href="https://github.com/Kashif4164"
               target="_blank"
               rel="noreferrer"
-              data-magnetic
-              data-cursor-text="LINK"
-              className="hover:text-white transition-colors duration-200"
+              aria-label="GitHub"
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white apple-glass-pill transition-all"
             >
-              {s.label}
+              <GithubIcon className="w-4 h-4" />
             </a>
-          ))}
+            <a
+              href="https://linkedin.com/in/sheikmohammedkashif"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn"
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white apple-glass-pill transition-all"
+            >
+              <LinkedinIcon className="w-4 h-4" />
+            </a>
+          </div>
         </div>
-      </footer>
-    </section>
+      </nav>
+
+      {/* ── HERO HERO CONTENT ── */}
+      <section className="min-h-[calc(100vh-4rem)] flex flex-col justify-center px-6 md:px-12 py-16 md:py-24 max-w-7xl mx-auto">
+        <div className="max-w-4xl">
+          {/* Subtitle / Role Tag (Bold & Medium Font) */}
+          <div className="inline-flex flex-wrap items-center gap-2.5 px-4 py-2 rounded-xl apple-glass-pill text-sm md:text-base mb-6 shadow-[inset_0_1px_0_0_rgba(6,182,212,0.2)]">
+            <span className="font-bold text-white tracking-tight">Sheik Mohammed Kashif</span>
+            <span className="text-cyan-400/50 font-normal">•</span>
+            <span className="font-semibold text-cyan-400">Generative AI & Backend Engineer</span>
+          </div>
+
+          {/* Main Headline */}
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white leading-[1.08] mb-8">
+            Architecting production{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-200">
+              RAG architectures
+            </span>
+            , LLM agents, and scalable cloud systems.
+          </h1>
+
+          {/* High-Impact Executive Summary */}
+          <p className="text-lg md:text-xl text-neutral-300 leading-relaxed max-w-3xl mb-10 font-normal">
+            Specialized in domain-specific document retrieval, cross-encoder re-ranking, and
+            hallucination guardrails. Shipped production AI platforms for banking and petroleum
+            clients, with backend systems deployed on Google Cloud Platform.
+          </p>
+
+          {/* Call to Actions */}
+          <div className="flex flex-wrap items-center gap-4">
+            <a
+              href="#projects"
+              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-lg bg-[#06b6d4] text-neutral-950 font-semibold text-sm hover:bg-[#22d3ee] transition-colors"
+            >
+              <span>View Selected Projects</span>
+              <ArrowRight className="w-4 h-4" />
+            </a>
+
+            <a
+              href="#contact"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-200 font-medium text-sm hover:bg-neutral-800 hover:text-white transition-colors"
+            >
+              <Mail className="w-4 h-4 text-[#06b6d4]" />
+              <span>Contact Me</span>
+            </a>
+
+            <a
+              href="#experience"
+              className="inline-flex items-center gap-2 px-4 py-3 text-neutral-400 hover:text-white text-sm font-mono transition-colors"
+            >
+              <span>Read Experience</span>
+            </a>
+          </div>
+
+          {/* Core Tech Stack Ribbon */}
+          <div className="mt-16 pt-8 border-t border-neutral-800/80">
+            <span className="text-xs font-mono uppercase tracking-wider text-neutral-500 block mb-3">
+              Production Core Stack:
+            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              {[
+                "Python",
+                "LangChain",
+                "FAISS",
+                "FastAPI",
+                "Google Cloud Platform",
+                "Docker",
+                "OpenAI GPT-4",
+                "React 19",
+                "TypeScript",
+              ].map((tech) => (
+                <span
+                  key={tech}
+                  className="px-3 py-1 rounded bg-neutral-900/80 border border-neutral-800 text-xs font-mono text-neutral-300"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }

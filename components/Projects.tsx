@@ -1,160 +1,255 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowRight, CheckCircle2, Workflow } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
+interface ProjectDetail {
+  id: string;
+  title: string;
+  category: string;
+  metric: string;
+  summary: string;
+  pipeline: string[];
+  challenge: string;
+  solution: string;
+  keyOutcomes: string[];
+  techCategories: {
+    label: string;
+    items: string[];
+  }[];
+}
 
-const PROJECTS = [
+const PROJECTS: ProjectDetail[] = [
   {
     id: "01",
-    title: "AI Customer Support Chatbot",
-    category: "Generative AI & Agentic Automation",
-    tech: ["Python", "Flask", "OpenAI GPT-4", "LangChain", "Docker", "GCP"],
-    desc: "Built a GPT-4 powered chatbot using LangChain and NLP techniques for automated customer support. Containerized with Docker and deployed on Google Cloud App Engine. Reduced manual support response time by 70%.",
+    title: "Document Q&A Agent (RAG)",
+    category: "High-Precision RAG & Retrieval Architecture",
+    metric: ">90% Retrieval Precision",
+    summary:
+      "Enterprise multi-document Question-Answering system designed with custom chunking, HuggingFace embeddings, FAISS vector indexing, and cross-encoder re-ranking to minimize hallucination risk.",
+    pipeline: [
+      "Document Ingestion",
+      "Semantic Chunking",
+      "HuggingFace Embeddings",
+      "FAISS Vector Store",
+      "Cross-Encoder Re-Ranking",
+      "Streamlit Audit UI",
+    ],
+    challenge:
+      "Standard RAG implementations suffer from context fragmentation, low semantic recall on domain documents, and severe hallucination when querying multi-source enterprise materials.",
+    solution:
+      "Architected a two-stage retrieval pipeline: preliminary nearest-neighbor search via FAISS, followed by cross-encoder re-ranking to filter low-relevance candidates. Coupled with a grounding-evaluation harness and source-chunk inspection UI.",
+    keyOutcomes: [
+      "Exceeded 90% retrieval precision across internal benchmark evaluation suites.",
+      "Integrated transparent source-chunk inspection in Streamlit, giving reviewers verified citations.",
+      "Eliminated out-of-context hallucinations through strict cross-encoder re-ranking thresholds.",
+    ],
+    techCategories: [
+      { label: "AI & RAG", items: ["Python", "LangChain", "HuggingFace Embeddings", "Cross-Encoder", "FAISS", "OpenAI"] },
+      { label: "Interface & Eval", items: ["Streamlit", "Retrieval Evaluation Harness", "Semantic Search"] },
+    ],
   },
   {
     id: "02",
-    title: "Document Q&A Agent",
-    category: "RAG Pipeline & Agentic Workflow",
-    tech: ["Python", "LangChain", "FAISS", "HuggingFace", "Streamlit"],
-    desc: "Implemented a document Q&A agent using RAG pipeline with FAISS vector database and HuggingFace embeddings for semantic NLP search. Achieved over 90% retrieval precision in internal evaluations.",
+    title: "AI Customer Support Chatbot",
+    category: "Production Agentic LLM & Cloud Microservice",
+    metric: "70% Response Time Cut",
+    summary:
+      "Containerized LLM customer support agent with multi-turn context memory management and calibrated prompt optimization, deployed to Google Cloud Platform via automated CI/CD.",
+    pipeline: [
+      "User Query",
+      "Context Memory Buffer",
+      "Prompt Optimization",
+      "GPT-4 / LangChain",
+      "Docker Microservice",
+      "GCP App Engine (CI/CD)",
+    ],
+    challenge:
+      "High volume of repetitive inquiries overwhelmed support personnel, while naive LLM implementations suffered from context drift, token bloat, and uncontrolled latency.",
+    solution:
+      "Engineered multi-turn context memory management to preserve conversational continuity within tight token budgets. Optimized prompts and few-shot formatting for fast inference, wrapped in Docker and deployed on GCP App Engine.",
+    keyOutcomes: [
+      "Reduced manual support ticket turnaround time by an estimated 70%.",
+      "Maintained low latency and cost predictability through prompt compression and memory buffers.",
+      "Achieved hands-off continuous deployment with Dockerized CI/CD on GCP.",
+    ],
+    techCategories: [
+      { label: "LLM & Agent", items: ["OpenAI GPT-4", "LangChain", "Multi-turn Memory", "Prompt Optimization"] },
+      { label: "Backend & Cloud", items: ["Python", "Flask", "Docker", "GCP App Engine", "CI/CD Pipelines"] },
+    ],
   },
   {
     id: "03",
-    title: "Malware Detection using ML",
-    category: "Classification Modeling & Security AI",
-    tech: ["Python", "Scikit-learn", "Random Forest", "SVM"],
-    desc: "Designed ML models to detect and classify malware using behavioral features and NLP-based log parsing. Improved accuracy through feature engineering and exposed predictions via REST API.",
+    title: "Automated Travel Trolley for Airport",
+    category: "Autonomous IoT & Sensor Fusion (Published Research)",
+    metric: "Co-Authored Research Paper",
+    summary:
+      "Autonomous AI/IoT smart airport trolley featuring RFID-authenticated user following, LiDAR and ultrasonic sensor fusion for dynamic collision avoidance, and integrated load-cell luggage verification.",
+    pipeline: [
+      "RFID User Auth",
+      "Pedestrian Tracking",
+      "LiDAR / Ultrasonic Fusion",
+      "Obstacle Avoidance",
+      "Load-Cell Baggage Scale",
+      "Published Paper",
+    ],
+    challenge:
+      "Airport passenger fatigue, manual baggage hauling across long terminals, and unexpected baggage weight limits at boarding gates causing avoidable bottlenecks.",
+    solution:
+      "Developed a custom hardware-software embedded system combining RFID authentication for hands-free following, multi-sensor fusion for real-time obstacle navigation in crowded public spaces, and load-cell weight calibration.",
+    keyOutcomes: [
+      "Co-authored and published peer-reviewed research paper detailing system architecture and empirical validation.",
+      "Real-time sensor fusion ensured safe autonomous following without line-of-sight dropouts.",
+      "Integrated weight sensor displayed baggage metrics immediately to prevent airport check-in penalties.",
+    ],
+    techCategories: [
+      { label: "Hardware & Edge", items: ["Arduino Uno", "LiDAR", "Ultrasonic Sensors", "Load-Cell Strain Gauges"] },
+      { label: "Sensors & Comms", items: ["RFID Authentication", "Bluetooth", "Sensor Fusion Algorithms", "Motor Control"] },
+    ],
   },
 ];
 
 export default function Projects() {
-  const [reduceMotion, setReduceMotion] = useState(false);
-  const container = useRef<HTMLDivElement>(null);
-  const labelRef = useRef<HTMLDivElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const onChange = (event: MediaQueryListEvent) => setReduceMotion(event.matches);
-
-    mediaQuery.addEventListener("change", onChange);
-    return () => mediaQuery.removeEventListener("change", onChange);
-  }, []);
-
-  useGSAP(
-    () => {
-      if (reduceMotion) return;
-
-      if (labelRef.current) {
-        gsap.from(labelRef.current, {
-          x: -30,
-          opacity: 0,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: container.current,
-            start: "top 75%",
-            toggleActions: "play none none none",
-          },
-        });
-      }
-
-      if (lineRef.current) {
-        gsap.fromTo(
-          lineRef.current,
-          { scaleX: 0 },
-          {
-            scaleX: 1,
-            transformOrigin: "left center",
-            scrollTrigger: {
-              trigger: container.current,
-              start: "top 80%",
-              end: "top 50%",
-              scrub: true,
-            },
-          }
-        );
-      }
-
-      if (cardsRef.current) {
-        const cards = cardsRef.current.querySelectorAll(".project-card");
-
-        cards.forEach((card) => {
-          gsap.from(card, {
-            y: 50,
-            opacity: 0,
-            scale: 0.95,
-            duration: 0.8,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          });
-        });
-      }
-    },
-    { scope: container, dependencies: [reduceMotion] }
-  );
-
   return (
     <section
-      ref={container}
       id="projects"
-      className="relative w-full bg-[#080808] text-white py-24 border-t border-neutral-800 px-6 md:px-12"
+      className="relative w-full bg-transparent text-white py-24 border-t border-white/[0.08] px-6 md:px-12"
     >
       <div className="max-w-7xl mx-auto">
-        {/* Label row */}
-        <div ref={labelRef} className="flex items-center gap-6 mb-16">
-          <span className="text-[10px] uppercase tracking-[0.4em] text-[#06b6d4] font-medium">
-            ( 003 ) — Selected Work
+        {/* Clean Apple-style Section Header */}
+        <div className="mb-14">
+          <span className="text-xs font-mono uppercase tracking-widest text-[#06b6d4] font-semibold block mb-2">
+            Featured Work
           </span>
-          <div ref={lineRef} className="flex-1 h-px bg-neutral-800 origin-left" />
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white">
+            Projects
+          </h2>
+          <p className="text-sm md:text-base text-neutral-400 mt-2 max-w-2xl">
+            Selected engineering case studies showcasing end-to-end RAG pipelines, agentic workflows, and cloud deployments.
+          </p>
         </div>
 
-        {/* Project grid */}
-        <div ref={cardsRef} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Project Case Studies with Apple Glassmorphism */}
+        <div className="flex flex-col gap-14">
           {PROJECTS.map((p) => (
             <div
               key={p.id}
-              className="project-card group relative flex flex-col justify-between p-8 bg-neutral-900/20 border border-neutral-800 rounded-2xl overflow-hidden transition-all duration-500 hover:bg-neutral-900/40 hover:border-neutral-700"
+              className="p-8 md:p-12 apple-glass-card rounded-3xl relative overflow-hidden"
             >
-              {/* Glowing gradient background on hover */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none -z-10">
-                <div className="absolute -top-24 -right-24 w-64 h-64 bg-cyan-500/10 blur-[80px] rounded-full" />
-              </div>
-
-              <div>
-                <div className="flex justify-between items-center mb-6">
-                  <span className="text-cyan-400 font-mono text-sm">{p.id}</span>
-                  <span className="text-[10px] uppercase tracking-[0.15em] text-neutral-400 border border-neutral-800 px-3 py-1 rounded-full backdrop-blur-sm">
-                    {p.category}
-                  </span>
+              {/* Top Banner: ID, Title & Metric */}
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 pb-8 border-b border-white/[0.08]">
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#06b6d4] font-semibold">
+                      Project {p.id}
+                    </span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-neutral-600" />
+                    <span className="text-xs text-neutral-400 font-mono">
+                      {p.category}
+                    </span>
+                  </div>
+                  <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-white">
+                    {p.title}
+                  </h3>
+                  <p className="mt-4 text-sm md:text-base text-neutral-300 max-w-4xl leading-relaxed">
+                    {p.summary}
+                  </p>
                 </div>
-                <h3 className="text-xl md:text-2xl font-bold tracking-tight uppercase leading-snug text-white group-hover:text-cyan-300 transition-colors">
-                  {p.title}
-                </h3>
-                <p className="mt-4 text-neutral-400 text-xs md:text-sm leading-relaxed">
-                  {p.desc}
-                </p>
+
+                {/* Primary Metric Badge (Frosted Glass Pill) */}
+                <div className="shrink-0">
+                  <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-400/25 text-[#06b6d4] font-mono text-sm font-bold shadow-[inset_0_1px_0_0_rgba(6,182,212,0.25)]">
+                    <Workflow className="w-4 h-4 text-[#06b6d4]" />
+                    <span>{p.metric}</span>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex flex-wrap gap-1.5 mt-8 pt-6 border-t border-neutral-800/60">
-                {p.tech.map((t) => (
-                  <span
-                    key={t}
-                    className="text-[10px] uppercase tracking-[0.1em] text-neutral-300 bg-white/5 px-2.5 py-1 rounded border border-white/5 font-mono"
-                  >
-                    {t}
-                  </span>
-                ))}
+              {/* Architecture Dataflow Pipeline (Apple Glass Subcard) */}
+              <div className="mt-8 pt-2">
+                <span className="text-[11px] uppercase font-mono tracking-widest text-neutral-400 block mb-3 font-semibold">
+                  System Architecture Pipeline:
+                </span>
+                <div className="flex flex-wrap items-center gap-2.5 p-4 md:p-5 apple-glass-subcard rounded-2xl">
+                  {p.pipeline.map((step, idx) => (
+                    <div key={idx} className="flex items-center gap-2.5">
+                      <span className="px-3.5 py-1.5 rounded-xl apple-glass-pill text-xs font-mono text-slate-200 font-medium">
+                        {step}
+                      </span>
+                      {idx < p.pipeline.length - 1 && (
+                        <ArrowRight className="w-3.5 h-3.5 text-[#06b6d4]/80 shrink-0" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Challenge vs Solution & Outcomes (Apple Glass Grid) */}
+              <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Challenge & Solution Box */}
+                <div className="p-6 md:p-8 apple-glass-subcard rounded-2xl flex flex-col justify-between">
+                  <div>
+                    <div className="mb-5">
+                      <span className="text-[11px] uppercase font-mono tracking-wider text-rose-400 font-bold block mb-1.5">
+                        The Technical Challenge
+                      </span>
+                      <p className="text-neutral-300 text-sm leading-relaxed">
+                        {p.challenge}
+                      </p>
+                    </div>
+
+                    <div className="pt-5 border-t border-white/[0.08]">
+                      <span className="text-[11px] uppercase font-mono tracking-wider text-cyan-400 font-bold block mb-1.5">
+                        Architectural Solution
+                      </span>
+                      <p className="text-neutral-200 text-sm leading-relaxed">
+                        {p.solution}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Key Measured Outcomes */}
+                <div className="p-6 md:p-8 apple-glass-subcard rounded-2xl flex flex-col justify-between">
+                  <div>
+                    <span className="text-[11px] uppercase font-mono tracking-wider text-emerald-400 font-bold block mb-4">
+                      Key Engineering Outcomes & Validation
+                    </span>
+                    <ul className="space-y-3.5 text-sm text-neutral-300">
+                      {p.keyOutcomes.map((out, oIdx) => (
+                        <li key={oIdx} className="flex items-start gap-3">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                          <span className="leading-relaxed">{out}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Categorized Tech Stack */}
+              <div className="mt-8 pt-6 border-t border-white/[0.08] flex flex-col md:flex-row md:items-center gap-6">
+                <span className="text-xs uppercase font-mono text-neutral-500 shrink-0">
+                  Tech Stack by Layer:
+                </span>
+                <div className="flex flex-wrap gap-6">
+                  {p.techCategories.map((cat, cIdx) => (
+                    <div key={cIdx} className="flex items-center gap-2.5">
+                      <span className="text-[11px] font-mono text-cyan-400 uppercase tracking-wider font-semibold">
+                        {cat.label}:
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {cat.items.map((item) => (
+                          <span
+                            key={item}
+                            className="text-[10px] uppercase font-mono tracking-wider text-neutral-300 apple-glass-pill px-2.5 py-1 rounded-md"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           ))}

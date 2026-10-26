@@ -65,8 +65,17 @@ export async function POST(req: Request) {
 
     if (error) {
       console.error("Supabase insert error:", error);
+      const isConnectionError =
+        error.message?.includes("fetch failed") ||
+        error.message?.includes("TypeError") ||
+        error.message?.includes("Failed to fetch");
+
       return NextResponse.json(
-        { error: error.message || "Failed to save message to database." },
+        {
+          error: isConnectionError
+            ? "Database connection failed. Please check your Supabase project status."
+            : error.message || "Failed to save message to database.",
+        },
         { status: 500 }
       );
     }

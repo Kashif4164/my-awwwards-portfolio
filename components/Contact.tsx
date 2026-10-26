@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useState } from "react";
+import { Mail, Send, CheckCircle2, AlertCircle } from "lucide-react";
 
 type FormState = {
   name: string;
@@ -22,11 +23,6 @@ export default function Contact() {
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [feedback, setFeedback] = useState("");
 
-  const fallbackMailto = useMemo(() => {
-    const subject = encodeURIComponent(`Portfolio inquiry from ${form.name || "Website visitor"}`);
-    const body = encodeURIComponent(form.message || "Hi Kashif, I would like to discuss a project.");
-    return `mailto:sheikmohammedkashif@gmail.com?subject=${subject}&body=${body}`;
-  }, [form.message, form.name]);
 
   const validate = () => {
     if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
@@ -78,104 +74,159 @@ export default function Contact() {
       setFeedback("Thanks, your message has been sent. I will get back to you shortly.");
       setForm(INITIAL_FORM);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Unable to send right now.";
+      const rawMessage = error instanceof Error ? error.message : "";
+      const isRawFetchError =
+        rawMessage.includes("fetch failed") ||
+        rawMessage.includes("TypeError") ||
+        rawMessage.includes("Failed to fetch");
+
+      const displayMessage =
+        isRawFetchError || !rawMessage
+          ? "Unable to send right now. Please email me directly."
+          : rawMessage;
+
       setStatus("error");
-      setFeedback(`${message} You can also email me directly.`);
+      setFeedback(displayMessage);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <section id="contact" className="border-t border-neutral-800 bg-[#080808] px-6 py-20 md:px-12">
-      <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[1fr_1.2fr]">
-        <div className="space-y-6">
-          <span className="text-[10px] uppercase tracking-[0.4em] text-[#06b6d4]">( 004 ) - Contact</span>
-          <h2 className="text-4xl font-black uppercase tracking-tight text-white md:text-6xl">Let us build something bold.</h2>
-          <p className="max-w-md text-sm leading-relaxed text-neutral-400">
-            Share your project goals, timeline, and technical context. I usually reply within one business day.
-          </p>
-          <a
-            href={fallbackMailto}
-            className="inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-neutral-400 transition-colors hover:text-white"
-          >
-            <span className="h-px w-8 bg-neutral-700" />
-            Email Directly
-          </a>
+    <section id="contact" className="border-t border-white/[0.08] bg-transparent px-6 py-24 md:px-12">
+      <div className="mx-auto grid w-full max-w-6xl gap-12 lg:grid-cols-[1fr_1.3fr] items-start">
+        {/* Left Column: Context & Contact info */}
+        <div className="space-y-8">
+          <div>
+            <span className="text-xs font-mono uppercase tracking-widest text-[#06b6d4] font-semibold block mb-2">
+              Get In Touch
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white leading-tight">
+              Let&apos;s build something exceptional.
+            </h2>
+          </div>
 
-          <div className="pt-8 flex flex-col gap-3">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-neutral-500">Connect</span>
-            <div className="flex gap-6">
-              <a href="https://github.com/Kashif4164" target="_blank" rel="noreferrer" className="text-sm text-neutral-300 hover:text-[#06b6d4] transition-colors underline decoration-neutral-800 underline-offset-4">GitHub</a>
-              <a href="https://linkedin.com/in/sheikmohammedkashif" target="_blank" rel="noreferrer" className="text-sm text-neutral-300 hover:text-[#06b6d4] transition-colors underline decoration-neutral-800 underline-offset-4">LinkedIn</a>
+          <p className="text-base leading-relaxed text-neutral-300 max-w-md">
+            Whether you are looking to architect an enterprise RAG system, deploy production LLM agents, or discuss backend engineering roles, I would love to connect.
+          </p>
+
+          <div className="space-y-4 pt-2">
+            <a
+              href="mailto:sheikmohammedkashif@gmail.com"
+              className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl apple-glass-subcard text-sm text-neutral-200 hover:text-white hover:border-white/20 transition-all group"
+            >
+              <div className="w-8 h-8 rounded-xl bg-cyan-500/10 flex items-center justify-center text-[#06b6d4]">
+                <Mail className="w-4 h-4" />
+              </div>
+              <span className="font-mono text-xs">sheikmohammedkashif@gmail.com</span>
+            </a>
+
+            <div className="flex gap-4 pt-4">
+              <a
+                href="https://github.com/Kashif4164"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl apple-glass-pill text-xs font-mono text-neutral-300 hover:text-white hover:border-white/20 transition-all"
+              >
+                <span>GitHub Profile</span>
+              </a>
+              <a
+                href="https://linkedin.com/in/sheikmohammedkashif"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl apple-glass-pill text-xs font-mono text-neutral-300 hover:text-white hover:border-white/20 transition-all"
+              >
+                <span>LinkedIn Profile</span>
+              </a>
             </div>
           </div>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-5" noValidate>
-          <label className="block">
-            <span className="mb-2 block text-[11px] uppercase tracking-[0.3em] text-neutral-500">Name</span>
-            <input
-              type="text"
-              value={form.name}
-              onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
-              className="w-full border border-neutral-700 bg-transparent px-4 py-3 text-sm text-white outline-none transition-colors focus:border-[#06b6d4]"
-              autoComplete="name"
-              required
-            />
-          </label>
+        {/* Right Column: Apple-style Glassmorphism Form Card */}
+        <div className="apple-glass-card rounded-3xl p-8 md:p-10 relative overflow-hidden">
+          <form onSubmit={onSubmit} className="space-y-5" noValidate>
+            <div>
+              <label className="mb-2 block text-xs font-mono uppercase tracking-wider text-neutral-400">
+                Your Name
+              </label>
+              <input
+                type="text"
+                value={form.name}
+                onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
+                placeholder="e.g. Jane Doe"
+                className="w-full rounded-xl apple-glass-subcard px-4 py-3.5 text-sm text-white placeholder-neutral-500 outline-none transition-all focus:border-[#06b6d4] focus:ring-1 focus:ring-[#06b6d4]"
+                autoComplete="name"
+                required
+              />
+            </div>
 
-          <label className="block">
-            <span className="mb-2 block text-[11px] uppercase tracking-[0.3em] text-neutral-500">Email</span>
-            <input
-              type="email"
-              value={form.email}
-              onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
-              className="w-full border border-neutral-700 bg-transparent px-4 py-3 text-sm text-white outline-none transition-colors focus:border-[#06b6d4]"
-              autoComplete="email"
-              required
-            />
-          </label>
+            <div>
+              <label className="mb-2 block text-xs font-mono uppercase tracking-wider text-neutral-400">
+                Email Address
+              </label>
+              <input
+                type="email"
+                value={form.email}
+                onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
+                placeholder="name@company.com"
+                className="w-full rounded-xl apple-glass-subcard px-4 py-3.5 text-sm text-white placeholder-neutral-500 outline-none transition-all focus:border-[#06b6d4] focus:ring-1 focus:ring-[#06b6d4]"
+                autoComplete="email"
+                required
+              />
+            </div>
 
-          <label className="block">
-            <span className="mb-2 block text-[11px] uppercase tracking-[0.3em] text-neutral-500">Message</span>
-            <textarea
-              value={form.message}
-              onChange={(event) => setForm((prev) => ({ ...prev, message: event.target.value }))}
-              className="min-h-36 w-full resize-y border border-neutral-700 bg-transparent px-4 py-3 text-sm text-white outline-none transition-colors focus:border-[#06b6d4]"
-              required
-            />
-          </label>
+            <div>
+              <label className="mb-2 block text-xs font-mono uppercase tracking-wider text-neutral-400">
+                Project or Inquiry Details
+              </label>
+              <textarea
+                value={form.message}
+                onChange={(event) => setForm((prev) => ({ ...prev, message: event.target.value }))}
+                placeholder="Tell me about your project goals, technical context, or timeline..."
+                className="min-h-32 w-full rounded-xl apple-glass-subcard px-4 py-3.5 text-sm text-white placeholder-neutral-500 outline-none transition-all focus:border-[#06b6d4] focus:ring-1 focus:ring-[#06b6d4] resize-y"
+                required
+              />
+            </div>
 
-          <label className="sr-only" aria-hidden="true">
-            Company
-            <input
-              type="text"
-              tabIndex={-1}
-              autoComplete="off"
-              value={form.company}
-              onChange={(event) => setForm((prev) => ({ ...prev, company: event.target.value }))}
-            />
-          </label>
+            <label className="sr-only" aria-hidden="true">
+              Company
+              <input
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={form.company}
+                onChange={(event) => setForm((prev) => ({ ...prev, company: event.target.value }))}
+              />
+            </label>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="inline-flex items-center gap-4 border border-neutral-700 px-6 py-3 text-[11px] uppercase tracking-[0.25em] text-neutral-200 transition-colors hover:border-[#06b6d4] hover:text-white disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
-          >
-            <span className="h-px w-8 bg-[#06b6d4]" />
-            {isSubmitting ? "Sending..." : "Send Message"}
-          </button>
-
-          {feedback ? (
-            <p
-              role="status"
-              className={`text-sm ${status === "success" ? "text-emerald-400" : "text-rose-400"}`}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-xl bg-[#06b6d4] text-neutral-950 font-semibold text-sm hover:bg-[#22d3ee] transition-all disabled:cursor-not-allowed disabled:opacity-60 shadow-[0_0_25px_rgba(6,182,212,0.25)]"
             >
-              {feedback}
-            </p>
-          ) : null}
-        </form>
+              <Send className="w-4 h-4" />
+              <span>{isSubmitting ? "Sending..." : "Send Message"}</span>
+            </button>
+
+            {feedback && (
+              <div
+                role="status"
+                className={`flex items-center gap-2.5 p-3.5 rounded-xl text-xs font-mono ${
+                  status === "success"
+                    ? "bg-emerald-500/10 border border-emerald-500/25 text-emerald-300"
+                    : "bg-rose-500/10 border border-rose-500/25 text-rose-300"
+                }`}
+              >
+                {status === "success" ? (
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+                ) : (
+                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                )}
+                <span>{feedback}</span>
+              </div>
+            )}
+          </form>
+        </div>
       </div>
     </section>
   );

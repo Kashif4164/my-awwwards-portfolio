@@ -1,118 +1,251 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { CheckCircle2, Layers, Zap } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
+interface SubSystem {
+  title: string;
+  category: string;
+  metric?: string;
+  description: string;
+  achievements: string[];
+  tech: string[];
+}
+
+interface ExperienceItem {
+  id: string;
+  role: string;
+  company: string;
+  location: string;
+  period: string;
+  summary: string;
+  highlights: string[];
+  systems: SubSystem[];
+}
+
+const EXPERIENCES: ExperienceItem[] = [
+  {
+    id: "01",
+    role: "GenAI Developer",
+    company: "Karanji Infotech",
+    location: "Mangalore, India",
+    period: "Dec 2025 — May 2026",
+    summary:
+      "Led end-to-end architecture and deployment of enterprise Generative AI systems, delivering high-precision RAG pipelines for a petroleum client and production LMS solutions for banking clients.",
+    highlights: ["50% Manual Effort Reduction", "Banking-Scale CI/CD", "30% Content Authoring Acceleration"],
+    systems: [
+      {
+        title: "Enterprise Petroleum RAG Reconciliation Engine",
+        category: "RAG Architecture & Hallucination Guardrails",
+        metric: "50% Manual Effort Reduction",
+        description:
+          "Owned the end-to-end architecture of a production RAG system for a petroleum-sector client to cross-verify contractor payments across bank statements and payroll records.",
+        achievements: [
+          "Designed domain-specific document chunking and embedding strategy optimized for semi-structured bank statements and payroll JSON.",
+          "Built a LangChain retrieval pipeline with FAISS vector search for high-precision semantic matching.",
+          "Formulated a grounding-evaluation approach to eliminate hallucination risks in financial reconciliation outputs.",
+          "Automated contractor payment verification, cutting manual auditing effort by an estimated 50%.",
+        ],
+        tech: ["Python", "LangChain", "FAISS", "OpenAI", "RAG Grounding", "JSON ETL"],
+      },
+      {
+        title: "LMS GenAI V4 & Agentic Module Editor",
+        category: "Full-Stack AI Application & Banking Scale",
+        metric: "30% Faster Authoring",
+        description:
+          "Architected and shipped an enterprise AI-powered Learning Management System (LMS GenAI V4), deployed to a banking client at production scale with automated CI/CD pipelines.",
+        achievements: [
+          "Architected high-performance web interface using React 19, TypeScript, Vite, and Tailwind CSS v4.",
+          "Built an AI agent-driven Module Editor combining WaveNet-compatible voice-over generation, live preview rendering, and a REST API-driven dynamic quiz engine.",
+          "Accelerated manual content-authoring time by an estimated 30%.",
+          "Configured continuous integration and deployment (CI/CD) pipelines ensuring low-downtime banking releases.",
+        ],
+        tech: ["React 19", "TypeScript", "Tailwind CSS v4", "Vite", "WaveNet AI", "CI/CD"],
+      },
+      {
+        title: "Enterprise Security Guardrails & Reliability",
+        category: "Auth Security & Quality Engineering",
+        metric: "Zero Production Regressions",
+        description:
+          "Engineered platform security guardrails and end-to-end testing infrastructure to ensure strict enterprise compliance.",
+        achievements: [
+          "Implemented Firebase Authentication with JWT local-expiry validation and forced automatic logout on token invalidation.",
+          "Engineered reactive light/dark theming via React Context for enterprise usability.",
+          "Achieved comprehensive end-to-end test coverage with Vitest and React Testing Library, reducing production regression incidents.",
+        ],
+        tech: ["Firebase Auth", "JWT Guardrails", "Vitest", "React Testing Library"],
+      },
+    ],
+  },
+  {
+    id: "02",
+    role: "AI Engineer Intern",
+    company: "Movidu Technologies",
+    location: "Bengaluru, India (Remote)",
+    period: "Sep 2024 — Dec 2024",
+    summary:
+      "Engineered full-stack LLM application features, production RAG integrations, and autonomous task agents deployed on Google Cloud Platform.",
+    highlights: ["GCP Production Deployments", "High-Relevance RAG", "Automated Content Workflows"],
+    systems: [
+      {
+        title: "Production LLM Application & Cloud Inference Architecture",
+        category: "Full-Stack AI & Cloud Infrastructure",
+        metric: "Cloud-Scale Inference",
+        description:
+          "Developed end-to-end LLM application features connecting frontend clients to a dedicated cloud inference engine.",
+        achievements: [
+          "Integrated LangChain and OpenAI APIs across a React/Next.js frontend and a high-performance FastAPI inference backend.",
+          "Deployed containerized services to Google Cloud Platform (GCP) for scalable production inference.",
+        ],
+        tech: ["FastAPI", "Python", "Next.js", "LangChain", "OpenAI APIs", "GCP"],
+      },
+      {
+        title: "Production RAG Pipelines & Task-Automation Agents",
+        category: "RAG Integrations & Agentic Workflows",
+        metric: "Streamlined Workflows",
+        description:
+          "Designed grounding-focused RAG components and agentic automation to eliminate repetitive content generation overhead.",
+        achievements: [
+          "Engineered RAG pipeline integrations (embeddings, retrieval, and prompt evaluation) that shipped to production.",
+          "Significantly improved grounding and content-generation relevance while reducing manual review cycles.",
+          "Developed LLM-based task-automation agents that streamlined internal workflows for faster turnaround.",
+        ],
+        tech: ["RAG Pipelines", "Embeddings", "Prompt Evaluation", "Autonomous Agents"],
+      },
+    ],
+  },
+];
 
 export default function Experience() {
-  const [reduceMotion, setReduceMotion] = useState(
-    () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-  
-  const container = useRef(null);
-  const itemsRef = useRef<HTMLDivElement>(null);
-  const labelRef = useRef<HTMLDivElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const onChange = (event: MediaQueryListEvent) => setReduceMotion(event.matches);
-
-    mediaQuery.addEventListener("change", onChange);
-    return () => mediaQuery.removeEventListener("change", onChange);
-  }, []);
-
-  useGSAP(
-    () => {
-      if (reduceMotion) return;
-
-      if (labelRef.current) {
-        gsap.from(labelRef.current, {
-          x: -30,
-          opacity: 0,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: container.current,
-            start: "top 75%",
-            toggleActions: "play none none none",
-          },
-        });
-      }
-
-      if (lineRef.current) {
-        gsap.fromTo(
-          lineRef.current,
-          { scaleX: 0 },
-          {
-            scaleX: 1,
-            transformOrigin: "left center",
-            scrollTrigger: {
-              trigger: container.current,
-              start: "top 80%",
-              end: "top 50%",
-              scrub: true,
-            },
-          }
-        );
-      }
-
-      if (itemsRef.current) {
-        gsap.from(itemsRef.current.children, {
-          y: 40,
-          opacity: 0,
-          stagger: 0.15,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: itemsRef.current,
-            start: "top 80%",
-            toggleActions: "play none none none",
-          },
-        });
-      }
-    },
-    { scope: container, dependencies: [reduceMotion] }
-  );
-
   return (
-    <section ref={container} className="relative w-full bg-[#080808] text-white py-24 border-t border-neutral-800 px-6 md:px-12">
+    <section
+      id="experience"
+      className="relative w-full bg-transparent text-white py-24 border-t border-white/[0.08] px-6 md:px-12"
+    >
       <div className="max-w-7xl mx-auto">
-        {/* Label row */}
-        <div ref={labelRef} className="flex items-center gap-6 mb-16">
-          <span className="text-[10px] uppercase tracking-[0.4em] text-[#ff0055] font-medium">
-            ( 003 ) — Experience
+        {/* Clean Apple-style Section Header */}
+        <div className="mb-14">
+          <span className="text-xs font-mono uppercase tracking-widest text-[#06b6d4] font-semibold block mb-2">
+            Career & Work History
           </span>
-          <div ref={lineRef} className="flex-1 h-px bg-neutral-800 origin-left" />
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white">
+            Professional Experience
+          </h2>
+          <p className="text-sm md:text-base text-neutral-400 mt-2 max-w-2xl">
+            Production engineering roles delivering enterprise RAG architectures, full-stack AI platforms, and cloud deployments.
+          </p>
         </div>
 
-        <div ref={itemsRef} className="flex flex-col gap-0 group">
-          {/* Experience Item 1 */}
-          <div className="group/item relative flex flex-col md:flex-row gap-6 md:gap-12 py-12 border-b border-neutral-800 transition-all duration-500 hover:bg-neutral-900 border-t first:border-t-neutral-800">
-            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-[#ff0055]/5 to-transparent opacity-0 group-hover/item:opacity-100 transition-opacity duration-700 pointer-events-none" />
-            
-            <div className="w-full md:w-1/3 flex md:justify-between items-start text-neutral-400 p-4 pt-1">
-              <span className="text-[10px] uppercase font-sans tracking-[0.2em] text-neutral-600 block">01 /</span>
-              <div className="font-serif italic text-2xl md:text-3xl text-neutral-300 group-hover/item:text-[#ff0055] transition-colors duration-500">
-                2025 — Present
+        {/* Experience Cards with Apple Glassmorphism */}
+        <div className="flex flex-col gap-14">
+          {EXPERIENCES.map((exp) => (
+            <div
+              key={exp.id}
+              className="p-8 md:p-12 apple-glass-card rounded-3xl relative overflow-hidden"
+            >
+              {/* Top Meta Header */}
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 pb-8 border-b border-white/[0.08]">
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#06b6d4] font-semibold">
+                      Role {exp.id}
+                    </span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-neutral-600" />
+                    <span className="text-xs text-neutral-400 font-mono">
+                      {exp.location}
+                    </span>
+                  </div>
+                  <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-white">
+                    {exp.role}
+                  </h3>
+                  <div className="flex items-center gap-3 mt-2">
+                    <span className="text-lg md:text-xl font-medium text-slate-200">
+                      {exp.company}
+                    </span>
+                    <span className="text-neutral-500">•</span>
+                    <span className="text-sm font-mono text-cyan-400 font-medium">
+                      {exp.period}
+                    </span>
+                  </div>
+                  <p className="mt-4 text-sm md:text-base text-neutral-300 max-w-4xl leading-relaxed">
+                    {exp.summary}
+                  </p>
+                </div>
+
+                {/* Highlight Badges (Frosted Glass Pills) */}
+                <div className="flex flex-wrap lg:flex-col gap-2 shrink-0">
+                  {exp.highlights.map((h, i) => (
+                    <div
+                      key={i}
+                      className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full apple-glass-pill text-cyan-300 text-xs font-mono font-medium border-cyan-500/30"
+                    >
+                      <Zap className="w-3.5 h-3.5 text-[#06b6d4]" />
+                      <span>{h}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Systems Delivered Grid */}
+              <div className="mt-8 space-y-6">
+                <h4 className="text-xs uppercase tracking-[0.25em] text-neutral-400 font-mono font-semibold flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-[#06b6d4]" />
+                  <span>Key Systems Architected & Shipped:</span>
+                </h4>
+
+                <div className="grid grid-cols-1 gap-6">
+                  {exp.systems.map((sys, sIdx) => (
+                    <div
+                      key={sIdx}
+                      className="p-6 md:p-8 apple-glass-subcard rounded-2xl hover:border-white/15 transition-all"
+                    >
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+                        <div>
+                          <span className="text-[11px] uppercase font-mono tracking-wider text-cyan-400 font-semibold block mb-1">
+                            {sys.category}
+                          </span>
+                          <h5 className="text-xl md:text-2xl font-bold text-white tracking-tight">
+                            {sys.title}
+                          </h5>
+                        </div>
+                        {sys.metric && (
+                          <div className="shrink-0 px-3.5 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-400/25 text-[#06b6d4] text-xs font-mono font-bold shadow-[inset_0_1px_0_0_rgba(6,182,212,0.25)]">
+                            {sys.metric}
+                          </div>
+                        )}
+                      </div>
+
+                      <p className="text-neutral-300 text-sm leading-relaxed mb-4">
+                        {sys.description}
+                      </p>
+
+                      <ul className="space-y-3 mb-6 text-sm text-neutral-300">
+                        {sys.achievements.map((ach, aIdx) => (
+                          <li key={aIdx} className="flex items-start gap-3">
+                            <CheckCircle2 className="w-4 h-4 text-[#06b6d4] shrink-0 mt-0.5" />
+                            <span className="leading-relaxed">{ach}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-white/[0.08]">
+                        <span className="text-[11px] uppercase font-mono text-neutral-400 mr-2">
+                          Technologies:
+                        </span>
+                        {sys.tech.map((t) => (
+                          <span
+                            key={t}
+                            className="text-[10px] uppercase font-mono tracking-wider text-neutral-300 apple-glass-pill px-2.5 py-1 rounded-md"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-            
-            <div className="w-full md:w-2/3 flex flex-col gap-4 p-4 pr-12">
-              <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white group-hover/item:translate-x-2 transition-transform duration-500">GenAI Developer</h3>
-              <p className="text-[#ff0055] text-sm uppercase tracking-[0.2em] font-bold group-hover/item:translate-x-2 transition-transform duration-500 delay-75">Karanji Infotech, Mangalore</p>
-              
-              <ul className="list-none text-neutral-400 space-y-4 text-sm md:text-base mt-4 group-hover/item:translate-x-2 transition-transform duration-500 delay-100">
-                <li className="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:bg-[#ff0055] before:rounded-full">Built LMS GenAI V4 — an enterprise AI-powered Learning Management System using React 19, TypeScript, Vite, and Tailwind CSS.</li>
-                <li className="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:bg-[#ff0055] before:rounded-full">Configured AI voice-over per slide and implemented live preview rendering via REST API integrations.</li>
-                <li className="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:bg-[#ff0055] before:rounded-full">Built a Wage Reconciliation RAG System for a petroleum company using LangChain and NLP for payment data extraction.</li>
-                <li className="relative pl-4 before:content-[''] before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:bg-[#ff0055] before:rounded-full">Applied vector database search and transformer-based document understanding for compliance checks.</li>
-              </ul>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
