@@ -1,24 +1,13 @@
 import type { Metadata } from "next";
-import { Inter, Oswald, Playfair_Display, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import SmoothScroll from "@/components/SmoothScroll";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-
-const oswald = Oswald({
-  subsets: ["latin"],
-  variable: "--font-oswald",
-});
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
 
 const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-});
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  style: ["normal", "italic"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -64,11 +53,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${oswald.variable} ${playfair.variable} ${jetbrains.variable} font-sans antialiased bg-[#090b10] text-slate-100 selection:bg-cyan-500/30 selection:text-cyan-200 min-h-screen`}
+        suppressHydrationWarning
+        className={`${inter.variable} ${jetbrains.variable} font-sans antialiased bg-[#090b10] text-slate-100 selection:bg-cyan-500/30 selection:text-cyan-200 min-h-screen`}
       >
-        <SmoothScroll>{children}</SmoothScroll>
+        {children}
       </body>
     </html>
   );
