@@ -1,11 +1,13 @@
 "use client";
 
-import { ArrowRight, CheckCircle2, Workflow } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, CheckCircle2, Workflow, Layers, ExternalLink } from "lucide-react";
 
 interface ProjectDetail {
   id: string;
   title: string;
   category: string;
+  filterTag: "rag" | "agent" | "iot";
   metric: string;
   summary: string;
   pipeline: string[];
@@ -23,6 +25,7 @@ const PROJECTS: ProjectDetail[] = [
     id: "01",
     title: "Document Q&A Agent (RAG)",
     category: "High-Precision RAG & Retrieval Architecture",
+    filterTag: "rag",
     metric: ">90% Retrieval Precision",
     summary:
       "Enterprise multi-document Question-Answering system designed with custom chunking, HuggingFace embeddings, FAISS vector indexing, and cross-encoder re-ranking to minimize hallucination risk.",
@@ -52,6 +55,7 @@ const PROJECTS: ProjectDetail[] = [
     id: "02",
     title: "AI Customer Support Chatbot",
     category: "Production Agentic LLM & Cloud Microservice",
+    filterTag: "agent",
     metric: "70% Response Time Cut",
     summary:
       "Containerized LLM customer support agent with multi-turn context memory management and calibrated prompt optimization, deployed to Google Cloud Platform via automated CI/CD.",
@@ -81,6 +85,7 @@ const PROJECTS: ProjectDetail[] = [
     id: "03",
     title: "Automated Travel Trolley for Airport",
     category: "Autonomous IoT & Sensor Fusion (Published Research)",
+    filterTag: "iot",
     metric: "Co-Authored Research Paper",
     summary:
       "Autonomous AI/IoT smart airport trolley featuring RFID-authenticated user following, LiDAR and ultrasonic sensor fusion for dynamic collision avoidance, and integrated load-cell luggage verification.",
@@ -109,31 +114,69 @@ const PROJECTS: ProjectDetail[] = [
 ];
 
 export default function Projects() {
+  const [filter, setFilter] = useState<"all" | "rag" | "agent" | "iot">("all");
+
+  const filteredProjects =
+    filter === "all" ? PROJECTS : PROJECTS.filter((p) => p.filterTag === filter);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    e.currentTarget.style.setProperty("--mouse-x", `${x}px`);
+    e.currentTarget.style.setProperty("--mouse-y", `${y}px`);
+  };
+
   return (
     <section
       id="projects"
       className="relative w-full bg-transparent text-white py-24 border-t border-white/[0.08] px-6 md:px-12"
     >
       <div className="max-w-7xl mx-auto">
-        {/* Clean Apple-style Section Header */}
-        <div className="mb-14">
-          <span className="text-xs font-mono uppercase tracking-widest text-[#06b6d4] font-semibold block mb-2">
-            Featured Work
-          </span>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white">
-            Projects
-          </h2>
-          <p className="text-sm md:text-base text-neutral-400 mt-2 max-w-2xl">
-            Selected engineering case studies showcasing end-to-end RAG pipelines, agentic workflows, and cloud deployments.
-          </p>
+        {/* Section Header & Filter Bar */}
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+          <div>
+            <span className="text-xs font-mono uppercase tracking-widest text-[#06b6d4] font-semibold block mb-2">
+              Featured Work
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white">
+              Projects
+            </h2>
+            <p className="text-sm md:text-base text-neutral-400 mt-2 max-w-2xl">
+              Production engineering case studies showcasing end-to-end RAG pipelines, agentic workflows, and cloud deployments.
+            </p>
+          </div>
+
+          {/* Interactive Filter Pills */}
+          <div className="flex flex-wrap items-center gap-2">
+            {[
+              { id: "all", label: "All Work (3)" },
+              { id: "rag", label: "RAG & Retrieval" },
+              { id: "agent", label: "Agentic LLMs" },
+              { id: "iot", label: "Autonomous IoT" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setFilter(tab.id as typeof filter)}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all ${
+                  filter === tab.id
+                    ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shadow-[0_0_12px_rgba(6,182,212,0.25)] font-semibold"
+                    : "apple-glass-pill text-neutral-400 hover:text-white"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Project Case Studies with Apple Glassmorphism */}
-        <div className="flex flex-col gap-14">
-          {PROJECTS.map((p) => (
+        {/* Project Case Studies */}
+        <div className="flex flex-col gap-12">
+          {filteredProjects.map((p) => (
             <div
               key={p.id}
-              className="p-8 md:p-12 apple-glass-card rounded-3xl relative overflow-hidden"
+              onMouseMove={handleMouseMove}
+              className="spotlight-card p-8 md:p-12 apple-glass-card rounded-3xl relative overflow-hidden transition-all duration-300 hover:border-white/25"
             >
               {/* Top Banner: ID, Title & Metric */}
               <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 pb-8 border-b border-white/[0.08]">
@@ -155,7 +198,7 @@ export default function Projects() {
                   </p>
                 </div>
 
-                {/* Primary Metric Badge (Frosted Glass Pill) */}
+                {/* Primary Metric Badge */}
                 <div className="shrink-0">
                   <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-400/25 text-[#06b6d4] font-mono text-sm font-bold shadow-[inset_0_1px_0_0_rgba(6,182,212,0.25)]">
                     <Workflow className="w-4 h-4 text-[#06b6d4]" />
@@ -164,7 +207,7 @@ export default function Projects() {
                 </div>
               </div>
 
-              {/* Architecture Dataflow Pipeline (Apple Glass Subcard) */}
+              {/* Architecture Dataflow Pipeline */}
               <div className="mt-8 pt-2">
                 <span className="text-[11px] uppercase font-mono tracking-widest text-neutral-400 block mb-3 font-semibold">
                   System Architecture Pipeline:
@@ -183,10 +226,10 @@ export default function Projects() {
                 </div>
               </div>
 
-              {/* Challenge vs Solution & Outcomes (Apple Glass Grid) */}
+              {/* Challenge vs Solution & Outcomes */}
               <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Challenge & Solution Box */}
-                <div className="p-6 md:p-8 apple-glass-subcard rounded-2xl flex flex-col justify-between">
+                <div className="p-6 md:p-8 apple-glass-subcard rounded-2xl flex flex-col justify-between border border-white/5">
                   <div>
                     <div className="mb-5">
                       <span className="text-[11px] uppercase font-mono tracking-wider text-rose-400 font-bold block mb-1.5">
@@ -209,7 +252,7 @@ export default function Projects() {
                 </div>
 
                 {/* Key Measured Outcomes */}
-                <div className="p-6 md:p-8 apple-glass-subcard rounded-2xl flex flex-col justify-between">
+                <div className="p-6 md:p-8 apple-glass-subcard rounded-2xl flex flex-col justify-between border border-white/5">
                   <div>
                     <span className="text-[11px] uppercase font-mono tracking-wider text-emerald-400 font-bold block mb-4">
                       Key Engineering Outcomes & Validation

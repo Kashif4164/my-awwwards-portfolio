@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Mail } from "lucide-react";
+import { ArrowRight, Mail, Sparkles, Terminal, Bot } from "lucide-react";
 
 function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
@@ -39,41 +39,55 @@ export default function Hero() {
           </a>
 
           {/* Nav links */}
-          <div className="hidden md:flex items-center gap-8 text-xs font-mono uppercase tracking-widest text-neutral-300">
+          <div className="hidden md:flex items-center gap-7 text-xs font-mono uppercase tracking-widest text-neutral-300">
             <a href="#about" className="hover:text-white transition-colors">
               About
             </a>
-            <a href="#experience" className="hover:text-white transition-colors">
-              Experience
+            <a
+              href="#simulator"
+              className="text-cyan-400 hover:text-cyan-200 transition-colors flex items-center gap-1 font-semibold"
+            >
+              <Bot className="w-3.5 h-3.5" />
+              RAG Demo
             </a>
             <a href="#projects" className="hover:text-white transition-colors">
               Projects
+            </a>
+            <a href="#experience" className="hover:text-white transition-colors">
+              Experience
             </a>
             <a href="#contact" className="hover:text-white transition-colors">
               Contact
             </a>
           </div>
 
-          {/* Right: Socials */}
-          <div className="flex items-center gap-2">
-            <a
-              href="https://github.com/Kashif4164"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="GitHub"
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white apple-glass-pill transition-all"
-            >
-              <GithubIcon className="w-4 h-4" />
-            </a>
-            <a
-              href="https://linkedin.com/in/sheikmohammedkashif"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="LinkedIn"
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white apple-glass-pill transition-all"
-            >
-              <LinkedinIcon className="w-4 h-4" />
-            </a>
+          {/* Right: Socials & Status */}
+          <div className="flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-mono text-emerald-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Available for Hire</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <a
+                href="https://github.com/Kashif4164"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+                className="w-9 h-9 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white apple-glass-pill transition-all"
+              >
+                <GithubIcon className="w-4 h-4" />
+              </a>
+              <a
+                href="https://linkedin.com/in/sheikmohammedkashif"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="LinkedIn"
+                className="w-9 h-9 rounded-xl flex items-center justify-center text-neutral-400 hover:text-white apple-glass-pill transition-all"
+              >
+                <LinkedinIcon className="w-4 h-4" />
+              </a>
+            </div>
           </div>
         </div>
       </nav>
@@ -81,7 +95,7 @@ export default function Hero() {
       {/* ── HERO HERO CONTENT ── */}
       <section className="min-h-[calc(100vh-4rem)] flex flex-col justify-center px-6 md:px-12 py-16 md:py-24 max-w-7xl mx-auto">
         <div className="max-w-4xl">
-          {/* Subtitle / Role Tag (Bold & Medium Font) */}
+          {/* Subtitle / Role Tag */}
           <div className="inline-flex flex-wrap items-center gap-2.5 px-4 py-2 rounded-xl apple-glass-pill text-sm md:text-base mb-6 shadow-[inset_0_1px_0_0_rgba(6,182,212,0.2)]">
             <span className="font-bold text-white tracking-tight">Sheik Mohammed Kashif</span>
             <span className="text-cyan-400/50 font-normal">•</span>
@@ -91,7 +105,7 @@ export default function Hero() {
           {/* Main Headline */}
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white leading-[1.08] mb-8">
             Architecting production{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-200">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-200 to-indigo-300">
               RAG architectures
             </span>
             , LLM agents, and scalable cloud systems.
@@ -101,55 +115,62 @@ export default function Hero() {
           <p className="text-lg md:text-xl text-neutral-300 leading-relaxed max-w-3xl mb-10 font-normal">
             Specialized in domain-specific document retrieval, cross-encoder re-ranking, and
             hallucination guardrails. Shipped production AI platforms for banking and petroleum
-            clients, with backend systems deployed on Google Cloud Platform.
+            clients, with backend microservices containerized on Google Cloud Platform.
           </p>
 
           {/* Call to Actions */}
           <div className="flex flex-wrap items-center gap-4">
             <a
-              href="#projects"
-              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-lg bg-[#06b6d4] text-neutral-950 font-semibold text-sm hover:bg-[#22d3ee] transition-colors"
+              href="#simulator"
+              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-[#06b6d4] text-neutral-950 font-semibold text-sm hover:bg-[#22d3ee] transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:scale-105 active:scale-95"
             >
-              <span>View Selected Projects</span>
+              <Bot className="w-4 h-4" />
+              <span>Launch RAG Simulator</span>
               <ArrowRight className="w-4 h-4" />
             </a>
 
             <a
-              href="#contact"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-200 font-medium text-sm hover:bg-neutral-800 hover:text-white transition-colors"
+              href="#projects"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl apple-glass-subcard border border-white/15 text-neutral-200 font-medium text-sm hover:bg-white/10 hover:text-white transition-all"
             >
-              <Mail className="w-4 h-4 text-[#06b6d4]" />
-              <span>Contact Me</span>
+              <span>View Selected Projects</span>
             </a>
 
             <a
-              href="#experience"
-              className="inline-flex items-center gap-2 px-4 py-3 text-neutral-400 hover:text-white text-sm font-mono transition-colors"
+              href="#contact"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl apple-glass-pill text-neutral-300 hover:text-white text-sm font-mono transition-colors"
             >
-              <span>Read Experience</span>
+              <Mail className="w-4 h-4 text-[#06b6d4]" />
+              <span>Contact</span>
             </a>
           </div>
 
           {/* Core Tech Stack Ribbon */}
-          <div className="mt-16 pt-8 border-t border-neutral-800/80">
-            <span className="text-xs font-mono uppercase tracking-wider text-neutral-500 block mb-3">
-              Production Core Stack:
-            </span>
+          <div className="mt-16 pt-8 border-t border-white/[0.08]">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-mono uppercase tracking-wider text-neutral-400">
+                Production Core Stack:
+              </span>
+              <span className="text-[11px] font-mono text-cyan-400">
+                Interactive Canvas Active (Move mouse to interact)
+              </span>
+            </div>
             <div className="flex flex-wrap items-center gap-2">
               {[
                 "Python",
                 "LangChain",
-                "FAISS",
+                "FAISS Vector DB",
+                "Cross-Encoder Re-Ranking",
                 "FastAPI",
-                "Google Cloud Platform",
                 "Docker",
+                "Google Cloud Platform",
                 "OpenAI GPT-4",
                 "React 19",
                 "TypeScript",
               ].map((tech) => (
                 <span
                   key={tech}
-                  className="px-3 py-1 rounded bg-neutral-900/80 border border-neutral-800 text-xs font-mono text-neutral-300"
+                  className="px-3 py-1.5 rounded-lg apple-glass-pill text-xs font-mono text-neutral-300 hover:text-cyan-300 hover:border-cyan-500/30 transition-colors"
                 >
                   {tech}
                 </span>

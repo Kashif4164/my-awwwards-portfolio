@@ -73,6 +73,18 @@ export default function Contact() {
       setStatus("success");
       setFeedback("Thanks, your message has been sent. I will get back to you shortly.");
       setForm(INITIAL_FORM);
+
+      try {
+        const confetti = (await import("canvas-confetti")).default;
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.7 },
+          colors: ["#06b6d4", "#22d3ee", "#6366f1", "#a855f7"],
+        });
+      } catch {
+        // non-blocking
+      }
     } catch (error) {
       const rawMessage = error instanceof Error ? error.message : "";
       const isRawFetchError =

@@ -84,6 +84,12 @@ export default function AntiGravityCanvas() {
       mouse.active = true;
     }
 
+    function handlePointerDown(e: PointerEvent) {
+      move(e);
+      spawnStar();
+      if (Math.random() < 0.6) spawnStar();
+    }
+
     function handlePointerLeave() {
       mouse.active = false;
     }
@@ -91,17 +97,21 @@ export default function AntiGravityCanvas() {
     /* shooting stars */
     const stars: Star[] = [];
     function spawnStar() {
-      const a = rnd(2.4, 2.8);
-      const s = rnd(12, 18);
+      const a = rnd(2.35, 2.85);
+      const s = rnd(14, 22);
       stars.push({
-        x: rnd(W * 0.15, W * 1.05),
-        y: rnd(-30, H * 0.35),
+        x: rnd(W * 0.1, W * 1.05),
+        y: rnd(-40, H * 0.45),
         vx: Math.cos(a) * s,
         vy: Math.sin(a) * s,
-        len: rnd(100, 200),
+        len: rnd(140, 240),
         life: 1,
       });
     }
+
+    // Initial shooting star on mount
+    spawnStar();
+    setTimeout(spawnStar, 600);
 
     function drawStars() {
       if (!ctx) return;
@@ -223,7 +233,7 @@ export default function AntiGravityCanvas() {
     build();
     window.addEventListener("resize", build, { passive: true });
     window.addEventListener("pointermove", move, { passive: true });
-    window.addEventListener("pointerdown", move, { passive: true });
+    window.addEventListener("pointerdown", handlePointerDown, { passive: true });
     window.addEventListener("pointerleave", handlePointerLeave, { passive: true });
     document.addEventListener("visibilitychange", handleVisibility);
 
@@ -233,7 +243,7 @@ export default function AntiGravityCanvas() {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", build);
       window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerdown", move);
+      window.removeEventListener("pointerdown", handlePointerDown);
       window.removeEventListener("pointerleave", handlePointerLeave);
       document.removeEventListener("visibilitychange", handleVisibility);
     };

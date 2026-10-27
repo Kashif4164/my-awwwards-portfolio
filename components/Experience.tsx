@@ -116,6 +116,14 @@ const EXPERIENCES: ExperienceItem[] = [
 ];
 
 export default function Experience() {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    e.currentTarget.style.setProperty("--mouse-x", `${x}px`);
+    e.currentTarget.style.setProperty("--mouse-y", `${y}px`);
+  };
+
   return (
     <section
       id="experience"
@@ -140,7 +148,8 @@ export default function Experience() {
           {EXPERIENCES.map((exp) => (
             <div
               key={exp.id}
-              className="p-8 md:p-12 apple-glass-card rounded-3xl relative overflow-hidden"
+              onMouseMove={handleMouseMove}
+              className="spotlight-card p-8 md:p-12 apple-glass-card rounded-3xl relative overflow-hidden transition-all duration-300 hover:border-white/25"
             >
               {/* Top Meta Header */}
               <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 pb-8 border-b border-white/[0.08]">
