@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
 
 type ContactPayload = {
@@ -41,12 +42,24 @@ export async function POST(req: Request) {
     const supabaseKey =
       process.env.SUPABASE_SERVICE_ROLE_KEY ||
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const resendApiKey = process.env.RESEND_API_KEY;
+    const contactRecipient = process.env.CONTACT_RECIPIENT_EMAIL;
 
     if (!supabaseUrl || !supabaseKey) {
       return NextResponse.json(
         {
           error:
             "Supabase credentials are not configured yet in .env.local. Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+        },
+        { status: 503 }
+      );
+    }
+
+    if (!resendApiKey || !contactRecipient) {
+      return NextResponse.json(
+        {
+          error:
+            "Email credentials are not configured yet in .env.local. Please add RESEND_API_KEY and CONTACT_RECIPIENT_EMAIL.",
         },
         { status: 503 }
       );
@@ -80,8 +93,25 @@ export async function POST(req: Request) {
       );
     }
 
+    const resend = new Resend(resendApiKey);
+    const { error: emailError } = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || "Portfolio <onboarding@resend.dev>",
+      to: [contactRecipient],
+      replyTo: email,
+      subject: `New portfolio message from ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
+    });
+
+    if (emailError) {
+      console.error("Resend email error:", emailError);
+      return NextResponse.json(
+        { error: "Message was saved, but the notification email could not be sent." },
+        { status: 502 }
+      );
+    }
+
     return NextResponse.json(
-      { success: true, message: "Message dispatched and saved successfully." },
+      { success: true, message: "Message sent and saved successfully." },
       { status: 200 }
     );
   } catch (err: unknown) {
