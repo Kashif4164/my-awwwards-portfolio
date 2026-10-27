@@ -105,7 +105,9 @@ export async function POST(req: Request) {
     if (emailError) {
       console.error("Resend email error:", emailError);
       return NextResponse.json(
-        { error: "Message was saved, but the notification email could not be sent." },
+        {
+          error: `Message was saved, but the notification email could not be sent: ${emailError.message}`,
+        },
         { status: 502 }
       );
     }
